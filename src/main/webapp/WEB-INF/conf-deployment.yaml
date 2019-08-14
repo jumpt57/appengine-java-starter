@@ -1,0 +1,8 @@
+resources:
+
+  - type: storage.v1.bucket
+    name: appengine-java-start-${environment}-config
+    properties:
+
+      location: europe-west1
+      storageClass: REGIONAL
