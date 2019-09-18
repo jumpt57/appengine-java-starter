@@ -11,6 +11,8 @@ import com.google.api.server.spi.config.Named;
 import com.google.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 
+import javax.validation.Valid;
+
 @Slf4j
 @Api(
         name = "core",
@@ -31,6 +33,15 @@ public class HelloWorldEndpoint {
     )
     public Message helloWorld(User user, @Named("name") String name) {
         return new Message(helloWorldService.hello(name));
+    }
+
+    @Secured
+    @ApiMethod(
+            path = "hello",
+            httpMethod = ApiMethod.HttpMethod.POST
+    )
+    public Message helloWorld2(User user, @Valid Message message) {
+        return new Message(helloWorldService.hello(message.getMessage()));
     }
 
 }
