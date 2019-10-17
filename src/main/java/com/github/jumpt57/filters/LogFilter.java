@@ -9,6 +9,7 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequestWrapper;
 import java.io.IOException;
 
@@ -19,7 +20,7 @@ public class LogFilter implements Filter {
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain chain) throws IOException, ServletException {
         HttpServletRequestWrapper request = (HttpServletRequestWrapper) servletRequest;
-        log.trace(request.getMethod() + " " + request.getRequestURI());
+        log.info(request.getMethod() + " " + request.getRequestURI());
         chain.doFilter(servletRequest, servletResponse);
     }
 

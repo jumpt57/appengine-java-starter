@@ -63,7 +63,7 @@
             <id>dev</id>
             <properties>
                 <environment>dev</environment>
-                <endpoints.project.id></endpoints.project.id>
+                <endpoints.project.id>test-project-g</endpoints.project.id>
             </properties>
         </profile>
         <profile>
@@ -224,6 +224,12 @@
             <groupId>ru.vyarus</groupId>
             <artifactId>guice-validator</artifactId>
             <version>${guice.validation.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>${javax.servlet.version}</version>
+            <scope>provided</scope>
         </dependency>
 
         <!-- Guava dependencies -->
