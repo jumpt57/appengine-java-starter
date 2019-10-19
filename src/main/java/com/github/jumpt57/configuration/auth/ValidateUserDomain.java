@@ -1,8 +1,8 @@
 package com.github.jumpt57.configuration.auth;
 
+import com.github.jumpt57.configuration.environment.ConfigurationFactory;
 import com.google.api.server.spi.auth.common.User;
 import com.google.api.server.spi.response.UnauthorizedException;
-import com.github.jumpt57.configuration.environment.ConfigurationFactory;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.aopalliance.intercept.MethodInterceptor;
@@ -13,12 +13,10 @@ import java.util.Arrays;
 @Slf4j
 public class ValidateUserDomain implements MethodInterceptor {
 
-    private static final String ENVIRONMENT = "environment";
-
     @Override
     public Object invoke(MethodInvocation methodInvocation) throws Throwable {
 
-        if("disable".equals(System.getProperty("endpointAuth"))){
+        if ("disable".equals(System.getProperty("endpointAuth"))) {
             return methodInvocation.proceed();
         }
 
@@ -39,7 +37,7 @@ public class ValidateUserDomain implements MethodInterceptor {
     }
 
     private boolean validateDomain(@NonNull String emailAddress) {
-        return ConfigurationFactory.get(System.getProperty(ENVIRONMENT))
+        return ConfigurationFactory.get()
                 .getAuthDomains().stream()
                 .anyMatch(emailAddress::contains);
     }

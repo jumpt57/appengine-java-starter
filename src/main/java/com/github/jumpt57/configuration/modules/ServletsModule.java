@@ -10,17 +10,19 @@ import java.util.Set;
 
 public class ServletsModule extends EndpointsModule {
 
+    private static final String ROOT = "/_ah/api/*";
+
     @Override
     public void configureServlets() {
 
         super.configureServlets();
 
-        filter("/_ah/api/*").through(LogFilter.class);
-        filter("/_ah/api/*").through(HeaderCORSFilter.class);
+        filter(ROOT).through(LogFilter.class);
+        filter(ROOT).through(HeaderCORSFilter.class);
 
         Reflections reflections = new Reflections("com.github");
         Set<Class<?>> endpoints = reflections.getTypesAnnotatedWith(Api.class);
-        configureEndpoints("/_ah/api/*", endpoints);
+        configureEndpoints(ROOT, endpoints);
     }
 
 }

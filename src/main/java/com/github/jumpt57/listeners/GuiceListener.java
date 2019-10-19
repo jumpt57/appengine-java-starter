@@ -2,7 +2,7 @@ package com.github.jumpt57.listeners;
 
 import com.github.jumpt57.configuration.modules.InterceptorsModule;
 import com.github.jumpt57.configuration.modules.ServletsModule;
-import com.google.appengine.api.LifecycleManager;
+import com.github.jumpt57.configuration.modules.google.GoogleModuleFactory;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.servlet.GuiceServletContextListener;
@@ -17,11 +17,11 @@ public class GuiceListener extends GuiceServletContextListener {
 
     @Override
     protected Injector getInjector() {
-        LifecycleManager.getInstance().setShutdownHook(() -> log.info("Shutting down..."));
         return Guice.createInjector(
                 new ServletsModule(),
                 new InterceptorsModule(),
-                new ImplicitValidationModule()
+                new ImplicitValidationModule(),
+                GoogleModuleFactory.get()
         );
     }
 

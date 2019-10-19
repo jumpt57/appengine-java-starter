@@ -1,5 +1,6 @@
 package com.github.jumpt57.configuration.clientIds;
 
+import com.github.jumpt57.configuration.environment.ConfigurationFactory;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.server.spi.Client;
@@ -8,7 +9,6 @@ import com.google.api.server.spi.auth.EndpointsAuthenticator;
 import com.google.api.server.spi.auth.GoogleAuth;
 import com.google.api.server.spi.auth.common.User;
 import com.google.api.server.spi.response.ServiceUnavailableException;
-import com.github.jumpt57.configuration.environment.ConfigurationFactory;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.servlet.http.HttpServletRequest;
@@ -19,7 +19,6 @@ import java.util.Objects;
 public class ClientIdsAuthenticator extends EndpointsAuthenticator {
 
     private static final String TOKEN_INFO_ENDPOINT = "https://www.googleapis.com/oauth2/v2/tokeninfo?access_token=";
-    private static final String ENVIRONMENT = "environment";
 
     @Override
     public User authenticate(HttpServletRequest request) throws ServiceUnavailableException {
@@ -29,7 +28,7 @@ public class ClientIdsAuthenticator extends EndpointsAuthenticator {
             String authToken = GoogleAuth.getAuthToken(request);
             GoogleAuth.TokenInfo tokenInfo = getTokenInfoRemote(authToken);
 
-            if (Objects.nonNull(tokenInfo) && ConfigurationFactory.get(System.getProperty(ENVIRONMENT))
+            if (Objects.nonNull(tokenInfo) && ConfigurationFactory.get()
                     .getClientIds().stream()
                     .anyMatch(s -> s.equals(tokenInfo.clientId))) {
                 return user;
