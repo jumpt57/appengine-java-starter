@@ -177,3 +177,12 @@ which extends BaseDevAppServerTestConfig.class and require
 to override getSdkRoot(), getAppDir() and getClasspath() in order
 for the runner to find the AppEngine Java SDK, the war to start and
 the classpath to load all of the dependencies.
+
+### To do
+* Add documentation about the AOP authentication and interceptors
+* Add documentation about the Google module
+* Add documentation about bean validation
+* Add example to show how to configure JPA with Cloud SQL
+* Add documentation about environment
+* Add documentation about resources loading in AppEngine
+* Add documentation to explain the dependencies
