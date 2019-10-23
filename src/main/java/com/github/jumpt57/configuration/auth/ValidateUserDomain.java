@@ -16,7 +16,7 @@ public class ValidateUserDomain implements MethodInterceptor {
     @Override
     public Object invoke(MethodInvocation methodInvocation) throws Throwable {
 
-        if ("disable".equals(System.getProperty("endpointAuth"))) {
+        if (System.getProperty("environment").equals("local")) {
             return methodInvocation.proceed();
         }
 

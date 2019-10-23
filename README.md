@@ -148,3 +148,32 @@ with the standard @Inject annotation
 * and more
 
 For more information : https://github.com/google/guice/wiki/Motivation
+
+### E2E or Function testing
+
+In order to create function testing (also called e2e testing) a goal of mine was 
+to be able to start the server through a java test. After a lot of research through 
+the official AppEngine documentation it became apparent that it was mandatory to use :
+
+```
+@RunWith(DevAppServerTestRunner.class)
+@DevAppServerTest(BaseDevAppServerTestConfig.class)
+``` 
+with 
+```
+LocalServiceTestHelper.class
+```
+
+In order to have an example of an e2e test you can refer to :
+```
+com.github.jumpt57.endpoints.HelloWorldEndpointTest.class
+```
+
+To simplify the big part happens in :
+```
+com.github.jumpt57.endpoints.EndpointConfig.class
+```
+which extends BaseDevAppServerTestConfig.class and require
+to override getSdkRoot(), getAppDir() and getClasspath() in order
+for the runner to find the AppEngine Java SDK, the war to start and
+the classpath to load all of the dependencies.

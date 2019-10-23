@@ -25,7 +25,7 @@ public class HelloWorldEndpointTest {
     @Before
     public void setUpServer() {
         helper.setUp();
-        System.setProperty("endpointAuth", "disable");
+        System.setProperty("environment", "local");
         port = System.getProperty("appengine.devappserver.test.port");
     }
 
