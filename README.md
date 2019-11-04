@@ -11,6 +11,10 @@ your application can scale to 0 instances when there is no traffic.
 
 For more information visit : https://cloud.google.com/appengine/docs/the-appengine-environments
 
+Also it provides the easiest way to transition from a standard servlet based application
+on a server to the Java 8 App Engine serverless service which is also
+servlet based.
+
 ### What does it contains ?
 
 The project is developed in Java 8.
@@ -44,50 +48,6 @@ mvn clean install -Pdev,deployment-manager
 ```
 This command will launch the deployment of GCP resources define in the conf-deployment.yaml 
 but targeting the dev GCP project
-
-#### Dependencies
-
-The application is shipped with a lot of dependencies from testing to API and DI.
-
-#### Testing
-
-* assertj
-* testng
-* mockito
-* appengine-testing
-* appengine-api-stubs
-* appengine-tools-sdk
-* junit
-* json-path
-
-#### Logging
-* slf4j-api
-* slf4j-jdk14
-
-#### Utils
-* Jackson 
-* lombok
-* mapstruct
-* reflections
-* feign
-* guava
-* guava-retrying
-
-#### Javax
-* servlet-api
-* javax.inject
-* javax.el
-* hibernate-validator
-* hibernate-validator-annotation-processor
-* guice-validator
-
-#### Google API
-* google-cloud-storage
-
-#### AppEngine
-* endpoints-framework V2
-* endpoints-framework-guice
-* appengine-api-1.0-sdk
 
 ### Useful commands 
 
@@ -136,7 +96,7 @@ Full documentation here : https://cloud.google.com/endpoints/
 In order for the application to be as easy as possible to work on it was obvious
 to integrate Google Endpoints V2 framework with the Dependency Injection Framework 
 Guice. Guice combined with Endpoints allow to :
-* Avoid direct constructor calls and factories and replace same 
+* Avoid direct constructor calls and factories and replace them 
 with the standard @Inject annotation
 * Remove the need for servlet XML configuration for Endpoints or filters
 * Create our own annotations to do AOP (for authentication of user or cron)
@@ -178,11 +138,118 @@ to override getSdkRoot(), getAppDir() and getClasspath() in order
 for the runner to find the AppEngine Java SDK, the war to start and
 the classpath to load all of the dependencies.
 
+### AOP authentication and interceptors
+
+In order to handle the authentication to the server there is two things. First of all
+there is there is an Authenticator to validate the Oauth token of the user.
+
+But I also wanted a way to validate the user rights like Spring Security, with an annotation.
+
+Guice provides a way to do it by using AOP which stands for Aspect Oriented Programming.
+
+https://github.com/google/guice/wiki/AOP
+
+It is a way of adding behavior through custom annotation.
+
+I have added two annotations :
+* one to validate the domain the user @Secured
+* the second to validate that the endpoint is called by a cron @Cron
+
+The annotation is bind to his specific MethodInterceptor through the the 
+InterceptorsModule and the bindInterceptor method.
+
+The MethodInterceptor contains a method called just before the actual
+method, in can either proceed or throw an exception.
+
+That way you can create whatever method you want to add behavior to your code.
+
+### Guice Google module
+
+In order for the application to be tested, launched locally and deployed. The
+application is provided with different Guice modules. The ones that are
+specific are for the Google Service. In the GCP we can use a lot of
+services such as GCS, Datastore, BigQuery and so on. But depending on what
+we want to achieve the way those services can be used in the code can
+be different for example between the local run and in the GCP. In the GCP
+credentials are handled by the container. Not locally which means that their
+are not built the same way. Locally or during tests we might want to create
+the service using a service account. 
+
+Well in the GuiceListener we have GoogleModuleFactory.get(). Depending if it
+is the local environment (see the environment section) it will inject the GoogleLocalModule 
+or the GoogleDeployModule. The first one uses the builder with setCredentials and the other 
+one the getDefaultInstance.
+
+This system can be used to target different GCP project even in production or to use different 
+quota.
+
+Moreover the is also the TestingGoogleModule which can be used to do the same
+or inject mock (with mockito).
+
+### Bean validation
+
+In order to validate bean I chose to use bean validation jsr 303 specification. Which allows to
+validate Java Classes through annotations like Hibernate. In order to do so I use a 
+specific dependency :
+```
+https://github.com/xvik/guice-validator
+```
+
+With the ImplicitValidationModule which allow to use annotations 
+like @NotBlank (see : com.github.jumpt57.models.Message).
+
+### JPA with Cloud SQL
+
+### Environments
+
+### Resources loading in AppEngine
+
 ### To do
-* Add documentation about the AOP authentication and interceptors
-* Add documentation about the Google module
-* Add documentation about bean validation
 * Add example to show how to configure JPA with Cloud SQL
 * Add documentation about environment
 * Add documentation about resources loading in AppEngine
 * Add documentation to explain the dependencies
+
+#### Dependencies
+
+The application is shipped with a lot of dependencies from testing to API and DI.
+
+#### Testing
+
+* assertj
+* testng
+* mockito
+* appengine-testing
+* appengine-api-stubs
+* appengine-tools-sdk
+* junit
+* json-path
+
+#### Logging
+* slf4j-api
+* slf4j-jdk14
+
+#### Utils
+* Jackson 
+* lombok
+* mapstruct
+* reflections
+* feign
+* guava
+* guava-retrying
+
+#### Javax
+* servlet-api
+* javax.inject
+* javax.el
+* hibernate-validator
+* hibernate-validator-annotation-processor
+* guice-validator
+
+#### Google API
+* google-cloud-storage
+
+#### AppEngine
+* endpoints-framework V2
+* endpoints-framework-guice
+* appengine-api-1.0-sdk
