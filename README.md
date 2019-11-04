@@ -109,9 +109,9 @@ with the standard @Inject annotation
 
 For more information : https://github.com/google/guice/wiki/Motivation
 
-### E2E or Function testing
+### E2E or Functional testing
 
-In order to create function testing (also called e2e testing) a goal of mine was 
+In order to create functional testing (also called e2e testing) a goal of mine was 
 to be able to start the server through a java test. After a lot of research through 
 the official AppEngine documentation it became apparent that it was mandatory to use :
 
