@@ -98,7 +98,8 @@ to integrate Google Endpoints V2 framework with the Dependency Injection Framewo
 Guice. Guice combined with Endpoints allow to :
 * Avoid direct constructor calls and factories and replace them 
 with the standard @Inject annotation
-* Remove the need for servlet XML configuration for Endpoints or filters
+* Remove the need for servlet XML configuration for Endpoints or filters through 
+ a web.xml (but it can be added for specifics use cases)
 * Create our own annotations to do AOP (for authentication of user or cron)
 * Inject components easily and create beans with the @Provied annotation
 * Use JPA with little configuration (still needs persistence.xml)
@@ -155,7 +156,7 @@ I have added two annotations :
 * one to validate the domain the user @Secured
 * the second to validate that the endpoint is called by a cron @Cron
 
-The annotation is bind to his specific MethodInterceptor through the the 
+The annotation is bind to his specific MethodInterceptor through the 
 InterceptorsModule and the bindInterceptor method.
 
 The MethodInterceptor contains a method called just before the actual
