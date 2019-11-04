@@ -201,7 +201,13 @@ like @NotBlank (see : com.github.jumpt57.models.Message).
 
 ### JPA with Cloud SQL
 
-In order for the application to communicate with Cloud SQL with need a couple of things.
+In order for the application to communicate with Cloud SQL we need a couple of things. 
+
+* A library or a ORM
+* An instance name
+* A JDBC Url
+* A user and a password
+
 First of all I chose to use Hibernate.
 
 In order to configure Hibernate I need to create a persistence.xml with all the correct values for :
@@ -223,7 +229,11 @@ It uses the Cloud SQL proxy to avoid opening the database to the world :
 ```
 jdbc:mysql://@/<DATABASE_NAME>?unix_socket=/cloudsql/<INSTANCE_CONNECTION_NAME>
 ```
-Proxy : https://cloud.google.com/sql/docs/mysql/quickstart-proxy-test
+Proxy : 
+```
+https://cloud.google.com/sql/docs/mysql/quickstart-proxy-test
+```
+
 You need to download the correct one for you OS and start it :
 ```
 ./cloud_sql_proxy -instances=<INSTANCE_CONNECTION_NAME>=tcp:3306
