@@ -9,6 +9,8 @@
         <property name="environment" value="${environment}"/>
     </system-properties>
 
+    <use-google-connector-j>true</use-google-connector-j>
+
     <application>${endpoints.project.id}</application>
 
 </appengine-web-app>

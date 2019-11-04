@@ -4,7 +4,7 @@ The goal of this project is to showcase a java application
 hosted on Google Cloud Platform and running on Google AppEngine
 Standard with everything needed.
 
-#### Why standard ?
+## Why standard ?
 To summarize Standard intent is to run for free or at very low cost, 
 where you pay only for what you need and when you need it. For example, 
 your application can scale to 0 instances when there is no traffic.
@@ -15,11 +15,11 @@ Also it provides the easiest way to transition from a standard servlet based app
 on a server to the Java 8 App Engine serverless service which is also
 servlet based.
 
-### What does it contains ?
+## What does it contains ?
 
 The project is developed in Java 8.
 
-#### Profiles
+### Profiles
 
 It uses Maven 3 as his build automation tool.
 
@@ -201,21 +201,63 @@ like @NotBlank (see : com.github.jumpt57.models.Message).
 
 ### JPA with Cloud SQL
 
+In order for the application to communicate with Cloud SQL with need a couple of things.
+First of all I chose to use Hibernate.
+
+In order to configure Hibernate I need to create a persistence.xml with all the correct values for :
+* hibernate.connection.url (different for local use and in production)
+* hibernate.connection.username
+* hibernate.connection.password
+
+I also need to tell App Engine to load the correct Driver by putting this in
+the appengine-web.xml :
+```
+<use-google-connector-j>true</use-google-connector-j>
+```
+
+For the database URL it is different if you want to contact the DB locally or in production :
+
+#### Locally 
+
+It uses the Cloud SQL proxy to avoid opening the database to the world :
+```
+jdbc:mysql://@/<DATABASE_NAME>?unix_socket=/cloudsql/<INSTANCE_CONNECTION_NAME>
+```
+Proxy : https://cloud.google.com/sql/docs/mysql/quickstart-proxy-test
+You need to download the correct one for you OS and start it :
+```
+./cloud_sql_proxy -instances=<INSTANCE_CONNECTION_NAME>=tcp:3306
+```
+
+#### In App Engine :
+
+In appengine the url is a little bit different because it uses the Google Java Driver :
+```
+jdbc:google:mysql://<INSTANCE_CONNECTION_NAME>/<DATABASE_NAME>?tcpKeepAlive=true
+```
+
+#### Use the EntityManager
+
+To interact with the DB after that you only have to call :
+```
+@Inject
+private EntityManager em;
+```
+
 ### Environments
 
 ### Resources loading in AppEngine
 
-### To do
-* Add example to show how to configure JPA with Cloud SQL
+## To do
 * Add documentation about environment
 * Add documentation about resources loading in AppEngine
 * Add documentation to explain the dependencies
 
-#### Dependencies
+## Dependencies
 
 The application is shipped with a lot of dependencies from testing to API and DI.
 
-#### Testing
+### Testing
 
 * assertj
 * testng
@@ -226,11 +268,11 @@ The application is shipped with a lot of dependencies from testing to API and DI
 * junit
 * json-path
 
-#### Logging
+### Logging
 * slf4j-api
 * slf4j-jdk14
 
-#### Utils
+### Utils
 * Jackson 
 * lombok
 * mapstruct
@@ -239,7 +281,7 @@ The application is shipped with a lot of dependencies from testing to API and DI
 * guava
 * guava-retrying
 
-#### Javax
+### Javax
 * servlet-api
 * javax.inject
 * javax.el
@@ -247,10 +289,10 @@ The application is shipped with a lot of dependencies from testing to API and DI
 * hibernate-validator-annotation-processor
 * guice-validator
 
-#### Google API
+### Google API
 * google-cloud-storage
 
-#### AppEngine
+### AppEngine
 * endpoints-framework V2
 * endpoints-framework-guice
 * appengine-api-1.0-sdk

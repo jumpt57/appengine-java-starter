@@ -46,6 +46,13 @@
 
         <!-- Logging dependencies -->
         <slf4j.version>1.7.25</slf4j.version>
+
+        <!-- Database dependencies -->
+        <hikari.version>2.6.1</hikari.version>
+        <mysql-connector.version>8.0.17</mysql-connector.version>
+        <mysqlfactory.version>1.0.15</mysqlfactory.version>
+        <hibernate.version>5.4.5.Final</hibernate.version>
+        <guice.persist.version>4.2.2</guice.persist.version>
     </properties>
 
     <profiles>
@@ -349,11 +356,44 @@
             <version>${slf4j.version}</version>
         </dependency>
 
+        <!-- Database dependencies -->
+        <dependency>
+            <groupId>com.zaxxer</groupId>
+            <artifactId>HikariCP</artifactId>
+            <version>${hikari.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>${mysql-connector.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.cloud.sql</groupId>
+            <artifactId>mysql-socket-factory-connector-j-8</artifactId>
+            <version>${mysqlfactory.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <version>${hibernate.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.inject.extensions</groupId>
+            <artifactId>guice-persist</artifactId>
+            <version>${guice.persist.version}</version>
+        </dependency>
+
     </dependencies>
 
     <build>
         <!-- for hot reload of the web application-->
         <outputDirectory>${project.build.directory}/${project.build.finalName}/WEB-INF/classes</outputDirectory>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
         <plugins>
             <!-- The WAR Plugin is responsible for collecting all artifact dependencies,
             classes and resources of the web application and packaging them into a web application archive. -->
@@ -373,6 +413,16 @@
                             <targetPath>WEB-INF</targetPath>
                         </resource>
                     </webResources>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.0.2</version>
+                <configuration>
+                    <nonFilteredFileExtensions>
+                        <extension>pem</extension>
+                    </nonFilteredFileExtensions>
                 </configuration>
             </plugin>
             <!-- Maven plugin to build and deploy Google App Engine applications -->
