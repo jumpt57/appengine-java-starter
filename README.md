@@ -199,6 +199,9 @@ https://github.com/xvik/guice-validator
 With the ImplicitValidationModule which allow to use annotations 
 like @NotBlank (see : com.github.jumpt57.models.Message).
 
+To validate the bean you can add the @Valid annotation, it will be triggered at runtime and
+return validation exception if the Java Object does not follow the rules.
+
 ### JPA with Cloud SQL
 
 In order for the application to communicate with Cloud SQL we need a couple of things. 
